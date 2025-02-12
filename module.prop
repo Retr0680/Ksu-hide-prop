@@ -1,0 +1,4 @@
+id=custom-prop-modifier
+name=Custom Prop Modifier
+author=Retr0_680
+description=Module to modify system properties at boot
