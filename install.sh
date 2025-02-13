@@ -21,21 +21,15 @@ echo "======================================"
 # Wait for 2 seconds before proceeding
 sleep 2
 
-# Ensure MODPATH is correctly set
-MODPATH=${0%/*}
-
 echo -e "\e[32m[*] Checking for updates...\e[0m"
-if [ -f "$MODPATH/update.sh" ]; then
-    chmod +x "$MODPATH/update.sh"
-    sh "$MODPATH/update.sh"
-else
-    echo -e "\e[31m[!] update.sh not found! Skipping update...\e[0m"
-fi
+sh "$MODPATH/update.sh"  # Run the update script
 
-# Set permissions and execute boot script
-if [ -f "$MODPATH/boot-completed.sh" ]; then
-    chmod +x "$MODPATH/boot-completed.sh"
-    sh "$MODPATH/boot-completed.sh"
-else
-    echo -e "\e[31m[!] boot-completed.sh not found! Module may not work properly.\e[0m"
-fi
+# Set permissions for boot-completed script
+chmod +x "$MODPATH/boot-completed.sh"
+
+# Ensure boot-completed script runs on boot
+cp "$MODPATH/boot-completed.sh" /data/adb/service.d/ksu-hide-prop.sh
+chmod +x /data/adb/service.d/ksu-hide-prop.sh
+
+# Confirm installation completion
+echo -e "\e[32m[*] Module installed successfully!\e[0m"
