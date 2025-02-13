@@ -1,8 +1,8 @@
 #!/system/bin/sh
 
-# Define the GitHub repository details
+# Define GitHub repository details
 REPO_OWNER="Retr0680"
-REPO_NAME="Ksu-hide-prop"
+REPO_NAME="ksu-hide-prop"
 MODULE_ZIP="ksu-hide-prop.zip"
 UPDATE_URL="https://github.com/$REPO_OWNER/$REPO_NAME/releases/latest/download/$MODULE_ZIP"
 
@@ -11,8 +11,8 @@ TMP_DIR="/sdcard/Download/KernelSU_Update"
 mkdir -p $TMP_DIR
 UPDATE_ZIP="$TMP_DIR/$MODULE_ZIP"
 
-# Check for updates manually via Kernelsu or other methods
-echo "[*] Checking for updates..."
+# Check for updates
+echo "[*] Checking for updates from GitHub..."
 
 # Download the latest module ZIP from GitHub
 curl -L -o "$UPDATE_ZIP" "$UPDATE_URL"
@@ -21,11 +21,13 @@ curl -L -o "$UPDATE_ZIP" "$UPDATE_URL"
 if [ $? -eq 0 ]; then
     echo "[✔] Download successful!"
     
-    # You can automatically install the update by extracting the new module
-    # Uncomment the following line if you want to update the module automatically
-    # unzip -o "$UPDATE_ZIP" -d "$MODPATH"
+    # Optionally, update the module by extracting the new version
+    # Make sure $MODPATH is correctly set to where your module is installed
+    unzip -o "$UPDATE_ZIP" -d "$MODPATH"
 
-    echo "[*] Update available! Please reboot your device to complete the update."
+    # Reboot prompt for the user to apply the update
+    echo "[*] Update applied. Please reboot your device to complete the update."
+
 else
     echo "[!] Download failed."
     exit 1
