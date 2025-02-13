@@ -18,4 +18,8 @@ resetprop ro.vendor.boot.warranty_bit 0
 resetprop persist.ksu.enabled 0
 resetprop persist.kernel.su 0
 resetprop persist.kernel.su.hide 1
-resetprop sys.oem_unlock_allowed 0
+
+# Extra stealth settings (Optional)
+resetprop sys.oem_unlock_allowed 0 # Prevents bootloader unlocking
+resetprop ro.build.selinux 1 # Some apps check SELinux status
+resetprop ro.boot.selinux enforcing
