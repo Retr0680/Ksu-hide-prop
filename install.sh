@@ -1,7 +1,12 @@
 #!/system/bin/sh
 
-clear  # Clears the screen for a clean look
+# Define module path
+MODPATH=/data/adb/modules/Ksu-hide-prop
 
+# Clear screen for a clean look
+clear
+
+# Display ASCII logo
 echo "======================================"
 echo " ██▀███  ▓█████▄▄▄█████▓ ██▀███   ▒█████  "
 echo "▓██ ▒ ██▒▓█   ▀▓  ██▒ ▓▒▓██ ▒ ██▒▒██▒  ██▒"
@@ -15,21 +20,25 @@ echo "   ░        ░  ░           ░         ░ ░"
 echo "======================================"
 echo "  KernelSU Prop Hide Module Installer"
 echo "======================================"
+
 sleep 2  # Wait for 2 seconds before proceeding
 
 echo -e "\e[32m[*] Checking for updates...\e[0m"
 
-# Check if update script exists before running
+# Run update.sh if it exists
 if [ -f "$MODPATH/update.sh" ]; then
-    sh "$MODPATH/update.sh"
+    chmod +x "$MODPATH/update.sh"
+    sh "$MODPATH/update.sh" || echo -e "\e[31m[!] update.sh execution failed!\e[0m"
 else
-    echo "[!] Update script not found."
+    echo -e "\e[31m[!] update.sh not found. Skipping update check.\e[0m"
 fi
 
-# Check if boot-completed.sh exists before running
+# Set permissions and run boot-completed.sh
 if [ -f "$MODPATH/boot-completed.sh" ]; then
     chmod +x "$MODPATH/boot-completed.sh"
-    sh "$MODPATH/boot-completed.sh"
+    sh "$MODPATH/boot-completed.sh" || echo -e "\e[31m[!] boot-completed.sh execution failed!\e[0m"
 else
-    echo "[!] boot-completed.sh not found!"
+    echo -e "\e[31m[!] boot-completed.sh not found! Installation may be incomplete.\e[0m"
 fi
+
+echo -e "\e[32m[*] Installation completed!\e[0m"
