@@ -2,5 +2,5 @@ id=ksu-prop-modifier
 name=KSU Prop Modifier
 author=Retr0_680
 description=Module to modify system properties at boot
-version=1.4
+version=1.5
 versionCode=1
