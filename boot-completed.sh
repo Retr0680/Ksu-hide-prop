@@ -1,5 +1,7 @@
 #!/system/bin/sh
 
+sleep 5
+
 # General root hiding
 resetprop ro.debuggable 0
 resetprop ro.secure 1
@@ -19,7 +21,7 @@ resetprop persist.ksu.enabled 0
 resetprop persist.kernel.su 0
 resetprop persist.kernel.su.hide 1
 
-# Extra stealth settings (Optional)
-resetprop sys.oem_unlock_allowed 0 # Prevents bootloader unlocking
-resetprop ro.build.selinux 1 # Some apps check SELinux status
+# Extra stealth settings
+resetprop sys.oem_unlock_allowed 0
+resetprop ro.build.selinux 1
 resetprop ro.boot.selinux enforcing
