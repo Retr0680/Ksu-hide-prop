@@ -1,5 +1,8 @@
 #!/system/bin/sh
 
+# Set module path
+MODPATH=/data/adb/modules/Ksu-hide-prop
+
 # Clear the screen for a clean look
 clear 
 
@@ -18,10 +21,15 @@ echo "  KernelSU Prop Hide Module Installer"
 echo "======================================"
 sleep 2  # Wait for 2 seconds before proceeding
 
-# Set the module path
-MODPATH=/data/adb/modules/Ksu-hide-prop
+# Ensure module directory exists
+mkdir -p "$MODPATH"
+chmod 755 "$MODPATH"
 
-# Ensure necessary permissions
+# Copy necessary files to module directory
+cp -af "$ZIPFILE" "$MODPATH/"
+chmod -R 755 "$MODPATH"
+
+# Ensure necessary scripts have execute permissions
 chmod +x "$MODPATH/boot-completed.sh"
 chmod +x "$MODPATH/update.sh"
 
@@ -35,4 +43,8 @@ if [ -f "$MODPATH/boot-completed.sh" ]; then
     sh "$MODPATH/boot-completed.sh"
 fi
 
-echo "[*] Module installation complete!"
+# Mark installation as successful
+touch "$MODPATH/ksu_installed"
+
+echo "[*] KernelSU module installed successfully!"
+exit 0
