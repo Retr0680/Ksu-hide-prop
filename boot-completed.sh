@@ -1,5 +1,7 @@
 #!/system/bin/sh
 
+sh "$MODPATH/update.sh"
+
 sleep 5
 
 # General root hiding
