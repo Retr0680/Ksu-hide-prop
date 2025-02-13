@@ -1,8 +1,12 @@
 #!/system/bin/sh
 
-sh "$MODPATH/update.sh"
+echo "[*] Running update script..."
+[ -f "$MODPATH/update.sh" ] && sh "$MODPATH/update.sh" || echo "[!] Update script not found or failed."
 
-sleep 5
+sleep 2
+
+# Ensure resetprop exists
+command -v resetprop >/dev/null 2>&1 || { echo "[!] resetprop not found. Exiting."; exit 1; }
 
 # General root hiding
 resetprop ro.debuggable 0
@@ -27,3 +31,5 @@ resetprop persist.kernel.su.hide 1
 resetprop sys.oem_unlock_allowed 0
 resetprop ro.build.selinux 1
 resetprop ro.boot.selinux enforcing
+
+echo "[*] KernelSU stealth mode applied successfully."
