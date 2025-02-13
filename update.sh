@@ -1,6 +1,5 @@
 #!/system/bin/sh
 
-# Define GitHub repository details
 REPO_OWNER="Retr0680"
 REPO_NAME="ksu-hide-prop"
 MODULE_ZIP="ksu-hide-prop.zip"
@@ -21,7 +20,6 @@ curl -L -o "$UPDATE_ZIP" "$UPDATE_URL"
 if [ $? -eq 0 ]; then
     echo "[✔] Download successful!"
     
-    # Optionally, update the module by extracting the new version
     # Make sure $MODPATH is correctly set to where your module is installed
     unzip -o "$UPDATE_ZIP" -d "$MODPATH"
 
