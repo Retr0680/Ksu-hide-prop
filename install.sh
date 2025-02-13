@@ -25,16 +25,17 @@ sleep 2  # Wait for 2 seconds before proceeding
 mkdir -p "$MODPATH"
 chmod 755 "$MODPATH"
 
-# Copy necessary files to module directory
-cp -af "$ZIPFILE" "$MODPATH/"
+# Extract module files
+unzip -o "$ZIPFILE" -d "$MODPATH" > /dev/null 2>&1
 chmod -R 755 "$MODPATH"
 
 # Ensure necessary scripts have execute permissions
-chmod +x "$MODPATH/boot-completed.sh"
-chmod +x "$MODPATH/update.sh"
+if [ -f "$MODPATH/boot-completed.sh" ]; then
+    chmod +x "$MODPATH/boot-completed.sh"
+fi
 
-# Run the update script
 if [ -f "$MODPATH/update.sh" ]; then
+    chmod +x "$MODPATH/update.sh"
     sh "$MODPATH/update.sh"
 fi
 
