@@ -1,11 +1,5 @@
 #!/system/bin/sh
 
-# Set module path
-MODPATH=/data/adb/modules/Ksu-hide-prop
-
-# Clear the screen for a clean look
-clear 
-
 echo "======================================"
 echo " ██▀███  ▓█████▄▄▄█████▓ ██▀███   ▒█████  "
 echo "▓██ ▒ ██▒▓█   ▀▓  ██▒ ▓▒▓██ ▒ ██▒▒██▒  ██▒"
@@ -19,33 +13,62 @@ echo "   ░        ░  ░           ░         ░ ░"
 echo "======================================"
 echo "  KernelSU Prop Hide Module Installer"
 echo "======================================"
-sleep 2  # Wait for 2 seconds before proceeding
 
-# Ensure module directory exists
-mkdir -p "$MODPATH"
-chmod 755 "$MODPATH"
+# Define the module's installation path
+MODPATH=${MODPATH:-/data/adb/modules/ksu-prop-modifier}
 
-# Extract module files
-unzip -o "$ZIPFILE" -d "$MODPATH" > /dev/null 2>&1
-chmod -R 755 "$MODPATH"
-
-# Ensure necessary scripts have execute permissions
-if [ -f "$MODPATH/boot-completed.sh" ]; then
-    chmod +x "$MODPATH/boot-completed.sh"
+# Check if the module path exists
+if [ ! -d "$MODPATH" ]; then
+    echo "[!] Module path does not exist: $MODPATH"
+    exit 1
 fi
 
-if [ -f "$MODPATH/update.sh" ]; then
-    chmod +x "$MODPATH/update.sh"
-    sh "$MODPATH/update.sh"
+# Check if the script is running with root privileges
+if [ "$(id -u)" -ne 0 ]; then
+    echo "[!] This script must be run as root."
+    exit 1
 fi
 
-# Run the boot script
-if [ -f "$MODPATH/boot-completed.sh" ]; then
-    sh "$MODPATH/boot-completed.sh"
+# Copy the boot-completed.sh file to the correct location
+echo "[*] Copying boot-completed.sh to /system/bin/"
+cp -f "$MODPATH/boot-completed.sh" /system/bin/
+if [ $? -eq 0 ]; then
+    echo "[✔] boot-completed.sh copied successfully."
+else
+    echo "[!] Failed to copy boot-completed.sh"
+    exit 1
 fi
 
-# Mark installation as successful
-touch "$MODPATH/ksu_installed"
+# Copy the update.sh file to the correct location
+echo "[*] Copying update.sh to /system/bin/"
+cp -f "$MODPATH/update.sh" /system/bin/
+if [ $? -eq 0 ]; then
+    echo "[✔] update.sh copied successfully."
+else
+    echo "[!] Failed to copy update.sh"
+    exit 1
+fi
 
-echo "[*] KernelSU module installed successfully!"
-exit 0
+# Set executable permissions for the copied scripts
+echo "[*] Setting executable permissions for boot-completed.sh and update.sh"
+chmod +x /system/bin/boot-completed.sh
+chmod +x /system/bin/update.sh
+
+# Verify if the permissions were set successfully
+if [ $? -eq 0 ]; then
+    echo "[✔] Permissions set successfully."
+else
+    echo "[!] Failed to set permissions."
+    exit 1
+fi
+
+# Confirm installation
+if [ -x /system/bin/boot-completed.sh ] && [ -x /system/bin/update.sh ]; then
+    echo "[✔] Installation complete."
+else
+    echo "[!] Installation failed. One or both scripts are not executable."
+    exit 1
+fi
+
+# Optional: Print further instructions or clean-up steps if necessary
+echo "[*] Please reboot your device to apply changes."
