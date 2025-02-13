@@ -1,35 +1,38 @@
 #!/system/bin/sh
 
-# Clear screen for a clean look
-clear
+# Clear the screen for a clean look
+clear 
 
-# ASCII Logo
 echo "======================================"
-echo " ██▀███  ▓█████▄▄▄█████▓ ██▀███   ▒█████  "
-echo "▓██ ▒ ██▒▓█   ▀▓  ██▒ ▓▒▓██ ▒ ██▒▒██▒  ██▒"
-echo "▓██ ░▄█ ▒▒███  ▒ ▓██░ ▒░▓██ ░▄█ ▒▒██░  ██▒"
-echo "▒██▀▀█▄  ▒▓█  ▄░ ▓██▓ ░ ▒██▀▀█▄  ▒██   ██░"
-echo "░██▓ ▒██▒░▒████▒ ▒██▒ ░ ░██▓ ▒██▒░ ████▓▒░"
-echo "░ ▒▓ ░▒▓░░░ ▒░ ░ ▒ ░░   ░ ▒▓ ░▒▓░░ ▒░▒░▒░"
-echo "  ░▒ ░ ▒░ ░ ░  ░   ░      ░▒ ░ ▒░  ░ ▒ ▒░"
-echo "  ░░   ░    ░    ░        ░░   ░ ░ ░ ░ ▒ "
-echo "   ░        ░  ░           ░         ░ ░ "
+echo " ██████  ██▓███   █    ██  ██▀███  "
+echo "▒██    ▒ ▓██░  ██▒ ██  ▓██▒▓██ ▒ ██▒"
+echo "░ ▓██▄   ▓██░ ██▓▒▓██  ▒██░▓██ ░▄█ ▒"
+echo "  ▒   ██▒▒██▄█▓▒ ▒▓▓█  ░██░▒██▀▀█▄  "
+echo "▒██████▒▒▒██▒ ░  ░▒▒█████▓ ░██▓ ▒██▒"
+echo "▒ ▒▓▒ ▒ ░▒▓▒░ ░  ░░▒▓▒ ▒ ▒ ░ ▒▓ ░▒▓░"
+echo "░ ░▒  ░ ░░▒ ░     ░░▒░ ░ ░   ░▒ ░ ▒░"
+echo "░  ░  ░  ░░        ░░░ ░ ░   ░░   ░ "
+echo "      ░              ░        ░     "
 echo "======================================"
 echo "  KernelSU Prop Hide Module Installer"
 echo "======================================"
+sleep 2  # Wait for 2 seconds before proceeding
 
-# Wait for 2 seconds before proceeding
-sleep 2
+# Set the module path
+MODPATH=/data/adb/modules/Ksu-hide-prop
 
-echo -e "\e[32m[*] Checking for updates...\e[0m"
-sh "$MODPATH/update.sh"  # Run the update script
-
-# Set permissions for boot-completed script
+# Ensure necessary permissions
 chmod +x "$MODPATH/boot-completed.sh"
+chmod +x "$MODPATH/update.sh"
 
-# Ensure boot-completed script runs on boot
-cp "$MODPATH/boot-completed.sh" /data/adb/service.d/ksu-hide-prop.sh
-chmod +x /data/adb/service.d/ksu-hide-prop.sh
+# Run the update script
+if [ -f "$MODPATH/update.sh" ]; then
+    sh "$MODPATH/update.sh"
+fi
 
-# Confirm installation completion
-echo -e "\e[32m[*] Module installed successfully!\e[0m"
+# Run the boot script
+if [ -f "$MODPATH/boot-completed.sh" ]; then
+    sh "$MODPATH/boot-completed.sh"
+fi
+
+echo "[*] Module installation complete!"
