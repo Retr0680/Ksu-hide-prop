@@ -1,9 +1,9 @@
 #!/system/bin/sh
 
 # Define GitHub repo details
-REPO_OWNER="YourGitHubUsername"
-REPO_NAME="YourRepoName"
-MODULE_ZIP="YourModule.zip"
+REPO_OWNER="Retr0680"
+REPO_NAME="Ksu-hide-prop"
+MODULE_ZIP="ksu-hide-prop.zip"
 UPDATE_URL="https://github.com/$REPO_OWNER/$REPO_NAME/releases/latest/download/$MODULE_ZIP"
 
 # Download the latest module ZIP
