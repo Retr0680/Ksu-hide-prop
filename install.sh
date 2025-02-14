@@ -33,6 +33,11 @@ EOF
     chmod 644 "$MODPATH/module.prop"
 fi
 
+chmod +x $MODPATH/post-fs-data.sh
+chmod +x $MODPATH/boot-completed.sh
+chmod +x $MODPATH/service.sh
+chmod +x $MODPATH/uninstall.sh
+
 # Mark the module as enabled
 touch "$MODPATH/enable"
 chmod 644 "$MODPATH/enable"
