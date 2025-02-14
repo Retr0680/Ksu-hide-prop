@@ -1,8 +1,10 @@
 #!/system/bin/sh
 
+# Wait for the system to fully boot
 sleep 5
 
 # General root hiding
+echo "[*] Hiding root traces..."
 resetprop ro.debuggable 0
 resetprop ro.secure 1
 resetprop ro.build.type user
@@ -19,9 +21,5 @@ resetprop ro.vendor.boot.warranty_bit 0
 # Hide KernelSU-specific traces
 resetprop persist.ksu.enabled 0
 resetprop persist.kernel.su 0
-resetprop persist.kernel.su.hide 1
 
-# Extra stealth settings
-resetprop sys.oem_unlock_allowed 0
-resetprop ro.build.selinux 1
-resetprop ro.boot.selinux enforcing
+echo "[✔] Root hiding completed."
