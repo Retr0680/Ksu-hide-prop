@@ -41,5 +41,5 @@ fi
 # Mark installation as successful
 touch "$MODPATH/ksu_installed"
 
-echo "[*] KernelSU module installed successfully!"
+echo "[*] KSU Hide Props is installed successfully!"
 exit 0
