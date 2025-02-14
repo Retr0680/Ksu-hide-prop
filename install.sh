@@ -1,45 +1,40 @@
 #!/system/bin/sh
 
 MODPATH=/data/adb/modules/ksu-hide-prop
-
-# Clear the screen for a clean look
-clear 
-
-echo "======================================"
-echo " ██▀███  ▓█████▄▄▄█████▓ ██▀███   ▒█████  "
-echo "▓██ ▒ ██▒▓█   ▀▓  ██▒ ▓▒▓██ ▒ ██▒▒██▒  ██▒"
-echo "▓██ ░▄█ ▒▒███  ▒ ▓██░ ▒░▓██ ░▄█ ▒▒██░  ██▒"
-echo "▒██▀▀█▄  ▒▓█  ▄░ ▓██▓ ░ ▒██▀▀█▄  ▒██   ██░"
-echo "░██▓ ▒██▒░▒████▒ ▒██▒ ░ ░██▓ ▒██▒░ ████▓▒░"
-echo "░ ▒▓ ░▒▓░░░ ▒░ ░ ▒ ░░   ░ ▒▓ ░▒▓░░ ▒░▒░▒░"
-echo "  ░▒ ░ ▒░ ░ ░  ░   ░      ░▒ ░ ▒░  ░ ▒ ▒░"
-echo "  ░░   ░    ░    ░        ░░   ░ ░ ░ ░ ▒ "
-echo "   ░        ░  ░           ░         ░ ░"
-echo "======================================"
-echo "  KernelSU Prop Hide Module Installer"
-echo "======================================"
-sleep 2
+BACKUP_PATH=/data/local/tmp/ksu-hide-prop-backup
 
 # Ensure module directory exists
 mkdir -p "$MODPATH"
 chmod 755 "$MODPATH"
 
-# Ensure necessary scripts have execute permissions
-chmod +x "$MODPATH/boot-completed.sh"
-chmod +x "$MODPATH/update.sh"
-
-# Move boot script to service.d for execution at boot
-mkdir -p /data/adb/service.d/
-cp -f "$MODPATH/boot-completed.sh" /data/adb/service.d/ksu-hide-prop.sh
-chmod +x /data/adb/service.d/ksu-hide-prop.sh
-
-# Run the update script if available
-if [ -f "$MODPATH/update.sh" ]; then
-    sh "$MODPATH/update.sh"
+# Create module.prop if missing
+if [ ! -f "$MODPATH/module.prop" ]; then
+    cat <<EOF > "$MODPATH/module.prop"
+id=ksu-hide-prop
+name=KSU Prop Modifier
+version=2.1
+versionCode=1
+author=Retr0_680
+description=Module to modify system properties at boot
+EOF
+    chmod 644 "$MODPATH/module.prop"
 fi
 
-# Mark installation as successful
-touch "$MODPATH/ksu_installed"
+# Ensure module is enabled
+touch "$MODPATH/enable"
+chmod 644 "$MODPATH/enable"
 
-echo "[*] KSU Hide Props is installed successfully!"
+# Prevent KernelSU from cleaning the module
+touch "$MODPATH/.disable_cleanup"
+
+# Backup module in case it's deleted on reboot
+rm -rf "$BACKUP_PATH"
+cp -r "$MODPATH" "$BACKUP_PATH"
+
+# Ensure boot script runs after reboot
+mkdir -p /data/adb/service.d/
+cp -f "$MODPATH/boot-completed.sh" /data/adb/service.d/ksu-hide-prop.sh"
+chmod +x /data/adb/service.d/ksu-hide-prop.sh"
+
+echo "[✔] Module installed successfully!"
 exit 0

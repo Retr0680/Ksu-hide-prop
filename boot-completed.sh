@@ -1,10 +1,20 @@
 #!/system/bin/sh
 
-# Wait for the system to fully boot
+MODPATH=/data/adb/modules/ksu-hide-prop
+BACKUP_PATH=/data/local/tmp/ksu-hide-prop-backup
+
+# Wait for system to boot fully
 sleep 5
 
+# Restore module if it's deleted
+if [ ! -d "$MODPATH" ] || [ -z "$(ls -A $MODPATH)" ]; then
+    echo "[!] Module directory is empty! Restoring..."
+    cp -r "$BACKUP_PATH" "$MODPATH"
+    chmod -R 755 "$MODPATH"
+    chown -R root:root "$MODPATH"
+fi
+
 # General root hiding
-echo "[*] Hiding root traces..."
 resetprop ro.debuggable 0
 resetprop ro.secure 1
 resetprop ro.build.type user
@@ -23,3 +33,4 @@ resetprop persist.ksu.enabled 0
 resetprop persist.kernel.su 0
 
 echo "[✔] Root hiding completed."
+exit 0
