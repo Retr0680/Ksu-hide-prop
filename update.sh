@@ -1,32 +1,40 @@
 #!/system/bin/sh
 
-REPO_OWNER="Retr0680"
-REPO_NAME="ksu-hide-prop"
-MODULE_ZIP="ksu-hide-prop.zip"
-UPDATE_URL="https://github.com/$REPO_OWNER/$REPO_NAME/releases/latest/download/$MODULE_ZIP"
+MODPATH=/data/adb/modules/ksu-hide-prop
+UPDATE_URL="https://github.com/Retr0680/ksu-hide-prop/archive/refs/heads/main.zip"
+UPDATE_ZIP="/data/local/tmp/ksu-hide-prop-update.zip"
+EXTRACT_PATH="/data/local/tmp/ksu-hide-prop-update"
 
-# Define temporary download directory
-TMP_DIR="/sdcard/Download/KernelSU_Update"
-mkdir -p $TMP_DIR
-UPDATE_ZIP="$TMP_DIR/$MODULE_ZIP"
+# Notify user
+echo "[*] Checking for updates..."
 
-# Check for updates
-echo "[*] Checking for updates from GitHub..."
-
-# Download the latest module ZIP from GitHub
-curl -L -o "$UPDATE_ZIP" "$UPDATE_URL"
-
-# Check if the download was successful
-if [ $? -eq 0 ]; then
-    echo "[✔] Download successful!"
-    
-    # Make sure $MODPATH is correctly set to where your module is installed
-    unzip -o "$UPDATE_ZIP" -d "$MODPATH"
-
-    # Reboot prompt for the user to apply the update
-    echo "[*] Update applied. Please reboot your device to complete the update."
-
-else
-    echo "[!] Download failed."
+# Download latest module version
+curl -L "$UPDATE_URL" -o "$UPDATE_ZIP"
+if [ $? -ne 0 ]; then
+    echo "[!] Failed to download update."
     exit 1
 fi
+
+# Remove old extracted files if exist
+rm -rf "$EXTRACT_PATH"
+mkdir -p "$EXTRACT_PATH"
+
+# Extract new update
+unzip -o "$UPDATE_ZIP" -d "$EXTRACT_PATH" > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo "[!] Failed to extract update."
+    exit 1
+fi
+
+# Copy new files to module directory
+cp -rf "$EXTRACT_PATH"/* "$MODPATH"/
+chmod -R 755 "$MODPATH"
+
+# Ensure scripts have execute permissions
+chmod +x "$MODPATH/install.sh"
+chmod +x "$MODPATH/boot-completed.sh"
+
+rm -rf "$UPDATE_ZIP" "$EXTRACT_PATH"
+
+echo "[*] Update applied! Reboot to take effect."
+exit 0
