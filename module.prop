@@ -1,7 +1,8 @@
 id=ksu-hide-prop
-name=KSU Hide Prop
-author=Retr0_680
-description=Module to modify system properties at boot
-version=2.1
-versionCode=1
-updateUrl=https://github.com/Retr0680/ksu-hide-prop/releases/latest/download/ksu-hide-prop.zip
+name=KernelSU Hide Prop
+version=2.2
+versionCode=100
+author=Retr0680
+description=Hides props from detection
+support=https://github.com/Retr0680/ksu-hide-prop
+ksuModule=true
